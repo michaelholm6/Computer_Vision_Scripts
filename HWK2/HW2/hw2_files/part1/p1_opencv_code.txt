@@ -1,0 +1,25 @@
+import cv2 as cv2
+import numpy as np
+
+unedited = cv2.imread('images/images/image_part1a.png')
+greyscl = cv2.cvtColor(unedited, cv2.COLOR_BGR2GRAY)
+th, binary = cv2.threshold(greyscl, 254, 255, cv2.THRESH_BINARY)
+binary = cv2.bitwise_not(binary)
+se = np.ones([1, 60], dtype=int)
+erodedBinary = cv2.erode(binary, se)
+dilatedBinary1 = cv2.dilate(erodedBinary, se)
+
+
+unedited = cv2.imread('images/images/image_part1b.png')
+greyscl = cv2.cvtColor(unedited, cv2.COLOR_BGR2GRAY)
+th, binary = cv2.threshold(greyscl, 254, 255, cv2.THRESH_BINARY)
+binary = cv2.bitwise_not(binary)
+se = np.ones([60, 1], dtype=int)
+erodedBinary = cv2.erode(binary, se)
+dilatedBinary = cv2.dilate(erodedBinary, se)
+Hori = np.concatenate((dilatedBinary1, dilatedBinary), axis=1)
+Verti = np.concatenate((dilatedBinary1, dilatedBinary), axis=0)
+cv2.imshow('HORIZONTAL', Hori)
+cv2.imshow('VERTICAL', Verti)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
