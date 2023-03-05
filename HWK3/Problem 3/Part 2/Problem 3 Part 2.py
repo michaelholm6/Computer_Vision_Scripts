@@ -1,9 +1,9 @@
 import cv2
 import numpy as np
 
-input_video = cv2.VideoCapture('p3_video1.avi')
-result = cv2.VideoWriter('Problem_3_part_2.avi',
-                        cv2.VideoWriter_fourcc(*'MJPG'),
+input_video = cv2.VideoCapture('p3_video2.avi')
+result = cv2.VideoWriter('Problem_3_part_2.mp4',
+                        cv2.VideoWriter_fourcc(*'MP4V'),
                         20, [960, 540])
 
 while input_video.isOpened():
@@ -14,6 +14,7 @@ while input_video.isOpened():
         RGBframe = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         framesize = np.shape(frame)
+        """checking if the key pixel has changed value, if it has, color all white pixels to read"""
         if (originalFrame[567, 402] != [62, 150, 218]).any():
             for i in range(280, 562):
                 for j in range(535, 601):
