@@ -1,9 +1,36 @@
-def FFT(input_values: list):
-    n = len(input_values)  # n must be a power of 2
-    if n == 1:
+from math import cos, sin
+
+
+class Imaginary:
+    def __init__(self, real, imag):
+        self.real = real
+        self.imag = imag
+
+    def __add__(self, other):
+        return Imaginary(self.real + other.real, self.imag + other.imag)
+
+    def __sub__(self, other):
+        return Imaginary(self.real - other.real, self.imag - other.imag)
+
+    def __mul__(self, other):
+        return Imaginary(self.real * other.real - self.imag * other.imag, self.real * other.imag + self.imag * other.real)
+
+    def __truediv__(self, other):
+        return Imaginary((self.real*other.real+self.imag*other.imag)/(other.real*other.real+other.imag*other.imag), (self.imag*other.real-self.real*other.imag)/(other.real*other.real+other.imag*other.imag))
+
+    def __str__(self):
+        return str(self.real) + " + " + str(self.imag) + "i"
+
+    def exp(self):
+        return Imaginary((2.71828183 ** self.real) * cos(self.imag), (2.71828183 ** self.real) * sin(self.imag))
+
+
+def IFFT_recursion(input_values: list):
+    n = Imaginary(len(input_values), 0)  # n must be a power of 2
+    if n.real == 1:
         return input_values
-    omega_first = 2.718281**(-2 * 3.1415926 * 1j / n)
-    omega = 1
+    omega_first = (Imaginary(2, 0) * Imaginary(3.14, 0) * Imaginary(0, 1) / n).exp()
+    omega = Imaginary(1, 0)
     a0 = []
     a1 = []
     for i in range(len(input_values)):
@@ -11,40 +38,23 @@ def FFT(input_values: list):
             a0.append(input_values[i])
         elif i % 2 == 1:
             a1.append(input_values[i])
-    y0 = FFT(a0)
-    y1 = FFT(a1)
-    output = [None] * n
-    for i in range(int((n / 2))):
-        output[i] = y0[i] + omega * y1[i]
-        output[i + int(n / 2)] = y0[i] - omega * y1[i]
+    y0 = IFFT_recursion(a0)
+    y1 = IFFT_recursion(a1)
+    output = [None] * n.real
+    for i in range(int((n / Imaginary(2, 0)).real)):
+        output[i] = (y0[i] + omega * y1[i])
+        output[i + int((n / Imaginary(2, 0)).real)] = (y0[i] - omega * y1[i])
         omega = omega * omega_first
     return output
 
 
-def IFFT(input_values_real: list, input_values_imag: list):
-    """For this IFFT implementation, im taking advantage of the fact that the IFFT of a vector is equal
-    to the FFT of the same vector reversed, but keeping it's first value in the same location. The algorithm for
-    the IFFT doesn't actually need to be implemented."""
-    n = len(input_values_real)
-    input_values_real_prefix = input_values_real[0]
-    input_values_real = input_values_real[1:n]
-    input_values_real.reverse()
-    input_values_real = [[input_values_real_prefix] + input_values_real]
-    input_values_imag_prefix = input_values_imag[0]
-    input_values_imag = input_values_imag[1:n]
-    input_values_imag.reverse()
-    input_values_imag = [[input_values_imag_prefix] + input_values_imag]
-    input_values_imag = input_values_imag[0]
-    input_values_real = input_values_real[0]
-    real_output = FFT(input_values_real)
-    imag_output = FFT(input_values_imag)
-    real_output = [x/n for x in real_output]
-    imag_output = [x/n for x in imag_output]
-    output = [real_output[i] + imag_output[i] for i in range(len(real_output))]
-
-    return output
+def IFFT(input_values):
+    output = IFFT_recursion(input_values)
+    real_output = [i/len(input_values) for i in output]
+    return real_output
 
 
 if __name__ == "__main__":
-    IFFT_output = IFFT([0, 0, 0, 0, 0, 0, 0, 0], [0, -4j, 0, 0, 0, 0, 0, 4j])
-    print(IFFT_output)
+    output_IFFT = IFFT([Imaginary(0, 0), Imaginary(0, -4), Imaginary(0, 0), Imaginary(0, 0), Imaginary(0, 0), Imaginary(0, 0), Imaginary(0, 0), Imaginary(0, 4)])
+    for number in output_IFFT:
+        print(number)
