@@ -2,6 +2,8 @@ import itertools
 import math as m
 from random import random
 
+
+
 A_test = [[.66, .34], [1, 0]]
 B_test = [[.5, .25, .25], [.1, .1, .8]]
 pi_test = [.8, .2]

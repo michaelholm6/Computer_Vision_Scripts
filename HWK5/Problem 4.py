@@ -7,7 +7,7 @@ B_test = [[0.66, 0.34, 0],
      [0, 0, 1],
      [0.5, 0.4, 0.1]]
 pi_test = [0.6, 0, 0.4]
-observation_sequence_test = [2,2,0,1,1,0,1]
+observation_sequence_test = [0,1,0,2,0,1,0]
 
 def backward_algorithm(A: list, B: list, pi: list, observation_sequence: list):
     beta_array = [[0 for i in range(len(observation_sequence))] for j in range(len(A[0]))]
@@ -25,3 +25,4 @@ def backward_algorithm(A: list, B: list, pi: list, observation_sequence: list):
 
 if __name__ == "__main__":
     beta_array = backward_algorithm(A_test, B_test, pi_test, observation_sequence_test)
+    print(beta_array)

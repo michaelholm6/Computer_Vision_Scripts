@@ -1,8 +1,10 @@
 import itertools
 
-A_test = [[.66, .34], [1, 0]]
-B_test = [[.5, .25, .25], [.1, .1, .8]]
-pi_test = [.8, .2]
+A_test = [[0.6, 0.4],
+     [1, 0]]
+B_test = [[0.7, 0.3, 0],
+     [0.1, 0.1, 0.8]]
+pi_test = [0.7, 0.3]
 observation_sequence_test = [2,2,0,1,1,0,1]
 
 
@@ -24,6 +26,7 @@ def Fast_HMM_Forward_Algo(A: list, B: list, pi: list, observation_sequence: list
 
 if __name__ == "__main__":
     output = Fast_HMM_Forward_Algo(A_test, B_test, pi_test, observation_sequence_test)
+    print(output)
     answer_sum = 0
     for i in output:
         answer_sum += i[-1]
